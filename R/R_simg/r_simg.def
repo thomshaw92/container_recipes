@@ -1,0 +1,109 @@
+Bootstrap: docker
+
+From: ubuntu:16.04
+
+IncludeCmd: yes
+
+
+
+%environment
+
+  R_VERSION=3.4.3
+
+  export R_VERSION
+
+  R_CONFIG_DIR=/etc/R/
+
+  export R_CONFIG_DIR
+
+  export LC_ALL=C
+
+  export PATH=$PATH
+
+
+
+%labels
+
+  Author Tom Shaw
+
+  Version v0.0.4
+
+  R_Version 3.4.3
+
+  build_date 2020 Jan 12
+
+  R_bioconductor True
+
+
+
+%apprun R
+
+  exec R "$@"
+
+
+
+%apprun Rscript
+
+  exec Rscript "$@"
+
+
+
+%runscript
+
+  exec R "$@"
+
+
+
+%post
+
+  apt-get update
+
+  apt-get install -y apt-transport-https apt-utils software-properties-common
+
+
+
+  #add CRAN/Ubuntu repo, add key, then refresh
+
+  apt-add-repository "deb https://cloud.r-project.org/bin/linux/ubuntu xenial/"
+
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+
+  apt-get update
+
+
+
+  apt-get install -y wget nano
+
+  apt-get install -y libblas3 libblas-dev liblapack-dev liblapack3 curl
+
+  apt-get install -y gcc fort77 aptitude
+
+  aptitude install -y g++
+
+  aptitude install -y xorg-dev
+
+  aptitude install -y libreadline-dev
+
+  aptitude install -y gfortran
+
+  gfortran --version
+
+  apt-get install -y libssl-dev libxml2-dev libpcre3-dev liblzma-dev libbz2-dev libcurl4-openssl-dev 
+
+  apt-get install -y libhdf5-dev hdf5-helpers libmariadb-client-lgpl-dev
+
+  apt-get install -y r-base r-base-dev r-cran-rgl
+
+  R --version
+
+  # installing packages from cran
+
+  R --slave -e 'install.packages("devtools",repos="https://cran.rstudio.com/")'
+
+  #R --slave -e 'install.packages("dplyr",repos="https://cran.rstudio.com/")'
+
+  #R --slave -e 'install.packages("rhdr5",repos="https://cran.rstudio.com/")'
+  
+  #install neuro packages 
+  R --slave -e 'source("https://neuroconductor.org/neurocLite.R") neuroc_install("ITKR")'
+  R --slave -e 'source("https://neuroconductor.org/neurocLite.R") neuroc_install("ANTsR")'

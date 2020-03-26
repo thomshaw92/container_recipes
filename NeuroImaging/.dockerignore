@@ -1,0 +1,8 @@
+*.simg
+.git
+*.tar
+*TRIAL
+*.zip
+ashs-1.0.0
+ashs_atlas_upennpmc_20170810
+ANTS_simg_trial
